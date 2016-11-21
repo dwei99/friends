@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<html>
+  <head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <meta charset="utf-8">
+    <title>Login/Registration</title>
+  </head>
+  <body>
+    <h3> Welcome! </h3>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<form class="register" action="/register" method="post">
+  {% csrf_token %}
+  Name: <input type="text" name="name" value=""> <br>
+  Alias: <input type="text" name="alias" value=""><br>
+  Email: <input type="text" name="email" value=""> <br>
+  Password: <input type="password" name="password" value =""> <br>
+  <h6> *Password should be at least 8 characters</h6>
+  Confirm Password: <input type="password" name="valpassword" value =""><br>
+  Date of Birth: <input type="date" name="dob" value =""> <br>
+  <input type = "submit" name="submit" value="Register">
+</form>
+<form class="login" action="/login" method="post">
+  {% csrf_token %}
+  Email: <input type="text" name="email" value=""> <br>
+  Password: <input type="password" name="password" value =""> <br>
+  <input type = "submit" name="submit" value="Login">
+</form>
+  </body>
+</html>

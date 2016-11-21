@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+  <head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <meta charset="utf-8">
+    <title>Friends</title>
+  </head>
+  <body>
+    <div class = "homeHeader">
+      Welcome, {{request.session.alias}}
+      <div class ="homeHeaderLinks">
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+    <br>
+    <caption>Here is the list of your friends</caption>
+    <div class = 'yourFriends'>
+      <table>
+        <tr>
+          <th>Alias</th>
+          <th>Action</th>
+        </tr>
+          {% for friend in your_friends %}
+        <tr>
+            {% if friend.alias == True %}
+            <h3> {{request.session.message}}</h3>
+            {% endif %}
+          <td>{{friend.friend.alias}}</td>
+          <td><a href="/user/{{friend.friend_id}}"> View Profile</a> &nbsp; <a href="/end/{{friend.friend_id}}">Remove as Friend</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <div class = 'otherUsers'>
+      <caption>Other Users not on your friend's list:</caption>
+      <table>
+        <tr>
+          <th>Alias</th>
+          <th>Action</th>
+        </tr>
+        {% for users in non_friends %}
+        <tr>
+          <td><a href="/user/{{users.id}}">{{users.alias}}</td>
+          <td><button><a href="/add_friend/{{users.id}}">Add as friend</a></button></td>
+        </tr>
+        <br>
+        {% endfor %}
+      <table>
+    </div>
+    </div>
+  </body>
+</html>

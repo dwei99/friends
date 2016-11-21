@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+  <head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <meta charset="utf-8">
+    {% for user in user_profile %}
+    <title>{{user.alias}}</title>
+  </head>
+  <body>
+    <div class = "homeHeader">
+      <div class ="homeHeaderLinks">
+        <a href="/friends">Home</a>
+        <a href="/logout">Logout</a>
+      </div>
+      <h3>{{user.alias}}'s Profile</h3>
+      Name: {{user.name}} <br>
+      Email Address: {{user.email}}
+    {% endfor %}
+    </div>
+  </body>
+</html>
