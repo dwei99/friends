@@ -7,12 +7,12 @@ class UserManager(models.Manager):
     def login(self, email, password):
         #search for user record if there is a match return user, if not return none
         user = User.objects.filter(email = email).filter(password = password)
-        print user
+        #print user
         if not user:
-            print "fail"
+            print "Failed"
             return False
         else:
-            print "true"
+            print "Passed"
             return True
 
 class Friendships(models.Model):
@@ -28,7 +28,7 @@ class Meta:
 class User(models.Model):
     name = models.CharField(max_length=100)
     alias = models.CharField(max_length=50)
-    email = models.CharField(max_length=255)
+    email = models.CharField(max_length=255, unique = True)
     password = models.CharField(max_length=100)
     dob = models.DateField(auto_now_add=False)
     create_dt = models.DateTimeField(auto_now_add=True)

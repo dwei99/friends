@@ -21,11 +21,13 @@
           <th>Alias</th>
           <th>Action</th>
         </tr>
+        <tr>
+          {% if not your_friends %}
+          <h3>You have no friends yet!</h3>
+          {% endif %}
+        </tr>
           {% for friend in your_friends %}
         <tr>
-            {% if friend.alias == True %}
-            <h3> {{request.session.message}}</h3>
-            {% endif %}
           <td>{{friend.friend.alias}}</td>
           <td><a href="/user/{{friend.friend_id}}"> View Profile</a> &nbsp; <a href="/end/{{friend.friend_id}}">Remove as Friend</a></td>
         </tr>
