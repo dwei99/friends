@@ -2,8 +2,6 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.models import User
 from models import User,Friendships
 from django.contrib import messages
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 import bcrypt
 
 
@@ -12,54 +10,34 @@ def index(request):
     if 'user_id' not in request.session:
         request.session['user_id'] = 0
     return render (request,"friends_app/main.html")
+
 def register(request):
     if request.method == 'POST':
-        try:
-            validate_email(request.POST['email'])
-        except ValidationError as e:
-            messages.add_message(request,messages.ERROR, 'Please enter a valid email')
-        else:
-            password = request.POST['password']
-            hashed = bcrypt.hashpw(password.encode(),bcrypt.gensalt())
-        if len(request.POST['password']) < 8:
-            messages.add_message(request,messages.ERROR, 'Please enter a password of 8 characters or more')
-        else:
-            if len(request.POST['name']) < 3:
-                    messages.add_message(request,messages.ERROR, 'Please enter a name of 3 characters or more')
-
-            user = User.objects.create(name=request.POST['name'],email=request.POST['email'],password=hashed, alias=request.POST['alias'], dob=request.POST['dob'])
+        name = request.POST['name']
+        alias = request.POST['alias']
+        email = request.POST['email']
+        password = request.POST['password']
+        confirm_ps = request.POST['valpassword']
+        dob = request.POST['dob']
+        user = User.objects.register(request,name,alias,email,password,confirm_ps,dob)
+        if not user:
+            messages.add_message(request,messages.ERROR, 'Registration Failed')
+            return redirect ('/')
+        if user:
             messages.add_message(request,messages.INFO, 'You have successfully registered')
-
+            return redirect ('/')
     return redirect('/')
 
 def login(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
-        if len(request.POST['password']) < 8:
-            messages.add_message(request,messages.ERROR, 'Please enter a password or 8 or more characters')
-        else:
-            try:
-                user = User.objects.get(email=email)
-            except:
-                messages.add_message(request,messages.ERROR, "User doesn't exist")
-                return redirect('/')
-            else:
-                encoded_ps = bcrypt.hashpw(password.encode(), user.password.encode())
-                print encoded_ps
-                if encoded_ps != user.password.encode():
-                    messages.add_message(request,messages.ERROR, "Password doesnt match for this user")
-                    return redirect('/')
-                else:
-                    User.objects.login(email, encoded_ps)
-                    if not user:
-                        messages.add_message(request,messages.ERROR, "invalid login information")
-                        return redirect('/')
-                    if user:
-                        #storing value in session to use for other features
-                        request.session['userid'] = user.id
-                        request.session['alias'] = user.alias
-                        return redirect ('/friends')
+        user = User.objects.login(request,email,password)
+        if not user:
+            messages.add_message(request,messages.ERROR, "invalid login information")
+            return redirect ('/')
+        if user:
+            return redirect ('/friends')
     return redirect ('/')
 
 def friends(request):

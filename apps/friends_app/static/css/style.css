@@ -35,3 +35,12 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
+
+.error{
+  color: red;
+  font-weight: bold;
+}
+.info{
+  color: green;
+  font-weight: bold;
+}
